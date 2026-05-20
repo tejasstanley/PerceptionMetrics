@@ -34,9 +34,9 @@ def build_dataset_ontology(use_train_id: bool = False) -> dict:
 
 
 def build_dataset(
-    train_dataset_dir: Optional[str] = None,
-    val_dataset_dir: Optional[str] = None,
-    test_dataset_dir: Optional[str] = None,
+    train_dataset_root: Optional[str] = None,
+    val_dataset_root: Optional[str] = None,
+    test_dataset_root: Optional[str] = None,
     image_dir: str = "leftImg8bit_trainvaltest/leftImg8bit",
     label_dir: str = "gtFine",
     image_suffix: str = "_leftImg8bit.png",
@@ -45,12 +45,12 @@ def build_dataset(
 ) -> Tuple[dict, dict]:
     """Build dataset and ontology dictionaries from Cityscapes dataset structure
 
-    :param train_dataset_dir: Directory containing training data, defaults to None
-    :type train_dataset_dir: str, optional
-    :param val_dataset_dir: Directory containing validation data, defaults to None
-    :type val_dataset_dir: str, optional
-    :param test_dataset_dir: Directory containing test data, defaults to None
-    :type test_dataset_dir: str, optional
+    :param train_dataset_root: Root directory containing training data, defaults to None
+    :type train_dataset_root: str, optional
+    :param val_dataset_root: Root directory containing validation data, defaults to None
+    :type val_dataset_root: str, optional
+    :param test_dataset_root: Root directory containing test data, defaults to None
+    :type test_dataset_root: str, optional
     :param image_dir: Subdirectory containing images within each dataset directory, defaults to "leftImg8bit_trainvaltest/leftImg8bit"
     :type image_dir: str, optional
     :param label_dir: Subdirectory containing labels within each dataset directory, defaults to "gtFine"
@@ -65,9 +65,9 @@ def build_dataset(
     :rtype: Tuple[dict, dict]
     """
     dataset_dirs = {
-        "train": train_dataset_dir,
-        "val": val_dataset_dir,
-        "test": test_dataset_dir,
+        "train": train_dataset_root,
+        "val": val_dataset_root,
+        "test": test_dataset_root,
     }
     dataset_dirs = {
         split: os.path.abspath(d) for split, d in dataset_dirs.items() if d is not None
@@ -135,12 +135,12 @@ class CityscapesImageSegmentationDataset(segmentation_dataset.ImageSegmentationD
     images -> leftImg8bit_trainvaltest.zip
     labels -> gtFine_trainvaltest.zip
 
-    :param train_dataset_dir: Directory containing training data, defaults to None
-    :type train_dataset_dir: str, optional
-    :param val_dataset_dir: Directory containing validation data, defaults to None
-    :type val_dataset_dir: str, optional
-    :param test_dataset_dir: Directory containing test data, defaults to None
-    :type test_dataset_dir: str, optional
+    :param train_dataset_root: Root directory containing training data, defaults to None
+    :type train_dataset_root: str, optional
+    :param val_dataset_root: Root directory containing validation data, defaults to None
+    :type val_dataset_root: str, optional
+    :param test_dataset_root: Root directory containing test data, defaults to None
+    :type test_dataset_root: str, optional
     :param image_dir: Subdirectory containing images within each dataset directory, defaults to "leftImg8bit_trainvaltest/leftImg8bit"
     :type image_dir: str, optional
     :param label_dir: Subdirectory containing labels within each dataset directory, defaults to "gtFine"
@@ -155,9 +155,9 @@ class CityscapesImageSegmentationDataset(segmentation_dataset.ImageSegmentationD
 
     def __init__(
         self,
-        train_dataset_dir: Optional[str] = None,
-        val_dataset_dir: Optional[str] = None,
-        test_dataset_dir: Optional[str] = None,
+        train_dataset_root: Optional[str] = None,
+        val_dataset_root: Optional[str] = None,
+        test_dataset_root: Optional[str] = None,
         image_dir: str = "leftImg8bit_trainvaltest/leftImg8bit",
         label_dir: str = "gtFine",
         image_suffix: str = "_leftImg8bit.png",
@@ -165,9 +165,9 @@ class CityscapesImageSegmentationDataset(segmentation_dataset.ImageSegmentationD
         use_train_id: bool = False,
     ):
         dataset, ontology = build_dataset(
-            train_dataset_dir=train_dataset_dir,
-            val_dataset_dir=val_dataset_dir,
-            test_dataset_dir=test_dataset_dir,
+            train_dataset_dir=train_dataset_root,
+            val_dataset_dir=val_dataset_root,
+            test_dataset_dir=test_dataset_root,
             image_dir=image_dir,
             label_dir=label_dir,
             image_suffix=image_suffix,
@@ -185,7 +185,7 @@ class CityscapesImageSegmentationDataset(segmentation_dataset.ImageSegmentationD
 
         print(f"Samples retrieved: {len(dataset)}")
 
-        all_dataset_dirs = [train_dataset_dir, val_dataset_dir, test_dataset_dir]
+        all_dataset_dirs = [train_dataset_root, val_dataset_root, test_dataset_root]
         dataset_dir = [d for d in all_dataset_dirs if d is not None][0]
 
         super().__init__(dataset, dataset_dir, ontology)
