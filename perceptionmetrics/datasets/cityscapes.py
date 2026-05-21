@@ -165,9 +165,9 @@ class CityscapesImageSegmentationDataset(segmentation_dataset.ImageSegmentationD
         use_train_id: bool = False,
     ):
         dataset, ontology = build_dataset(
-            train_dataset_dir=train_dataset_root,
-            val_dataset_dir=val_dataset_root,
-            test_dataset_dir=test_dataset_root,
+            train_dataset_root=train_dataset_root,
+            val_dataset_root=val_dataset_root,
+            test_dataset_root=test_dataset_root,
             image_dir=image_dir,
             label_dir=label_dir,
             image_suffix=image_suffix,
@@ -189,3 +189,13 @@ class CityscapesImageSegmentationDataset(segmentation_dataset.ImageSegmentationD
         dataset_dir = [d for d in all_dataset_dirs if d is not None][0]
 
         super().__init__(dataset, dataset_dir, ontology)
+
+if __name__ == "__main__":
+    cityscapes_dir = "local/data/cityscapes"
+
+    dataset = CityscapesImageSegmentationDataset(
+        train_dataset_root=cityscapes_dir,
+        val_dataset_root=cityscapes_dir,
+    )
+
+    print(dataset.dataset.head())
