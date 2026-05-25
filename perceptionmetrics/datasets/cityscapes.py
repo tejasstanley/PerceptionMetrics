@@ -219,6 +219,7 @@ class CityscapesImageSegmentationDataset(segmentation_dataset.ImageSegmentationD
 
         super().__init__(dataset, dataset_dir, ontology)
 
+
 if __name__ == "__main__":
     cityscapes_dir = "local/data/cityscapes"
 
