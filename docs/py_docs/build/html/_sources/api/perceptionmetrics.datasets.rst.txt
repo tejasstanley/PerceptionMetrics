@@ -4,6 +4,14 @@ perceptionmetrics.datasets package
 Submodules
 ----------
 
+perceptionmetrics.datasets.cityscapes module
+--------------------------------------------
+
+.. automodule:: perceptionmetrics.datasets.cityscapes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 perceptionmetrics.datasets.coco module
 --------------------------------------
 
