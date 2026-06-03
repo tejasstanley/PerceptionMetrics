@@ -41,6 +41,7 @@ REGISTRY = {
     "rellis3d_lidar_segmentation": Rellis3DLiDARSegmentationDataset,
     "rugd_image_segmentation": RUGDImageSegmentationDataset,
     "wildscenes_image_segmentation": WildscenesImageSegmentationDataset,
+    "cityscapes_image_segmentation": CityscapesImageSegmentationDataset,
     "nuimages_image_segmentation": NuImagesSegmentationDataset,
     "nuimages_detection": NuImagesDetectionDataset,
     "cityscapes_image_segmentation": CityscapesImageSegmentationDataset,
