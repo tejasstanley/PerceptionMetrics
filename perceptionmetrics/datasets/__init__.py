@@ -1,4 +1,4 @@
-from perceptionmetrics.datasets.nuimages_dataset import (
+from perceptionmetrics.datasets.nuimages import (
     NuImagesDetectionDataset,
     NuImagesSegmentationDataset,
 )
