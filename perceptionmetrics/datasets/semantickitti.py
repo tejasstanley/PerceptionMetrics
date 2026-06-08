@@ -39,33 +39,110 @@ def _find_sequence_root(dataset_dir: str, subdir: str) -> Optional[str]:
     return None
 
 
-def _build_ontology(config: dict) -> dict:
-    """Build a compact ontology from SemanticKITTI's learning-map config.
-    :param config: SemanticKITTI YAML config containing ontology and splits
-    :type config: dict
-    :return: Compact ontology with class names as keys and dicts with 'idx' and 'rgb' as values
+def build_ontology(
+    config_fname: str,
+    use_train_id: bool = False,
+    ontology_fname: Optional[str] = None,
+) -> dict:
+    """Build SemanticKITTI ontology.
+
+    If use_train_id=False, builds the raw SemanticKITTI ontology using raw label IDs
+    such as 0, 10, 11, 40, 252, etc.
+
+    If use_train_id=True, builds the compact training ontology using train IDs
+    from learning_map_inv, usually 0 to 19.
+
+    :param config_fname: SemanticKITTI YAML config file.
+    :type config_fname: str
+    :param use_train_id: Whether to build compact train-ID ontology, defaults to False.
+    :type use_train_id: bool
+    :param ontology_fname: Optional output JSON file to save ontology.
+    :type ontology_fname: Optional[str]
+    :return: Ontology dictionary.
     :rtype: dict
     """
+    assert os.path.isfile(config_fname), "SemanticKITTI config file not found"
+
+    config = uio.read_yaml(config_fname)
     labels = config["labels"]
     color_map = config["color_map"]
-    learning_map_inv = config["learning_map_inv"]
     content = config.get("content", {})
 
     ontology = OrderedDict()
-    for idx in sorted(learning_map_inv):
-        raw_idx = learning_map_inv[idx]
-        class_name = labels[raw_idx]
-        bgr = color_map[raw_idx]
-        class_data = {
-            "idx": idx,
-            "rgb": tuple(reversed(bgr)),
-        }
-        if raw_idx in content:
-            class_data["content"] = content[raw_idx]
-        ontology[class_name] = class_data
+
+    if use_train_id:
+        # Compact ontology: 0, 1, 2, ..., 19
+        learning_map_inv = config["learning_map_inv"]
+
+        for train_id in sorted(learning_map_inv):
+            raw_id = learning_map_inv[train_id]
+            class_name = labels[raw_id]
+            bgr = color_map[raw_id]
+
+            class_data = {
+                "idx": int(train_id),
+                "rgb": tuple(reversed(bgr)),
+            }
+            if raw_id in content:
+                class_data["content"] = content[raw_id]
+
+            ontology[class_name] = class_data
+
+    else:
+        # Raw ontology: 0, 1, 10, 11, 13, ..., 252, 253, ...
+        for raw_id in sorted(labels):
+            class_name = labels[raw_id]
+            bgr = color_map[raw_id]
+
+            class_data = {
+                "idx": int(raw_id),
+                "rgb": tuple(reversed(bgr)),
+            }
+            if raw_id in content:
+                class_data["content"] = content[raw_id]
+
+            ontology[class_name] = class_data
+
+    if ontology_fname is not None:
+        uio.write_json(ontology_fname, ontology)
 
     return ontology
 
+def build_train_id_ontology_translation(config_fname: str) -> dict:
+    """Build ontology translation from raw SemanticKITTI classes to train-ID classes.
+
+    The translation is based on SemanticKITTI's learning_map.
+
+    Example:
+        moving-car -> car
+        moving-person -> person
+        parking -> parking
+        road -> road
+
+    :param config_fname: SemanticKITTI YAML config file.
+    :type config_fname: str
+    :return: Dictionary mapping raw class names to train-ID class names.
+    :rtype: dict
+    """
+    assert os.path.isfile(config_fname), "SemanticKITTI config file not found"
+
+    config = uio.read_yaml(config_fname)
+
+    labels = config["labels"]
+    learning_map = config["learning_map"]
+    learning_map_inv = config["learning_map_inv"]
+
+    ontology_translation = OrderedDict()
+
+    for raw_id in sorted(labels):
+        raw_class_name = labels[raw_id]
+        train_id = learning_map[raw_id]
+        train_raw_id = learning_map_inv[train_id]
+        train_class_name = labels[train_raw_id]
+
+        ontology_translation[raw_class_name] = train_class_name
+
+    return ontology_translation
 
 def build_dataset(
     dataset_dir: str,
@@ -89,7 +166,7 @@ def build_dataset(
     assert os.path.isfile(config_fname), "SemanticKITTI config file not found"
 
     config = uio.read_yaml(config_fname)
-    ontology = _build_ontology(config)
+    ontology = build_ontology(config_fname, use_train_id=False)    
     requested_splits = [split] if isinstance(split, str) else split
 
     points_sequence_root = _find_sequence_root(dataset_dir, "velodyne")
@@ -193,12 +270,13 @@ class SemanticKITTILiDARSegmentationDataset(
         super().__init__(dataset, dataset_dir, ontology)
 
 
-if __name__ == "__main__":
-    dataset = SemanticKITTILiDARSegmentationDataset(
-        "local/data/SemanticKITTI",
-        "local/data/SemanticKITTI/semantic-kitti.yaml",
-        split="val",
-    )
+# if __name__ == "__main__":
+#     dataset = SemanticKITTILiDARSegmentationDataset(
+#         "local/data/SemanticKITTI",
+#         "local/data/SemanticKITTI/semantic-kitti.yaml",
+#         split="val",
+#     )
 
-    print(dataset.dataset["split"].value_counts().to_dict())
-    print(dataset.dataset.head())
+#     print(dataset.dataset["split"].value_counts().to_dict())
+#     print(dataset.dataset.head())    
+    
