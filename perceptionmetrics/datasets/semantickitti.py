@@ -108,6 +108,7 @@ def build_ontology(
 
     return ontology
 
+
 def build_train_id_ontology_translation(config_fname: str) -> dict:
     """Build ontology translation from raw SemanticKITTI classes to train-ID classes.
 
@@ -144,6 +145,7 @@ def build_train_id_ontology_translation(config_fname: str) -> dict:
 
     return ontology_translation
 
+
 def build_dataset(
     dataset_dir: str,
     config_fname: str,
@@ -166,7 +168,7 @@ def build_dataset(
     assert os.path.isfile(config_fname), "SemanticKITTI config file not found"
 
     config = uio.read_yaml(config_fname)
-    ontology = build_ontology(config_fname, use_train_id=False)    
+    ontology = build_ontology(config_fname, use_train_id=False)
     requested_splits = [split] if isinstance(split, str) else split
 
     points_sequence_root = _find_sequence_root(dataset_dir, "velodyne")
@@ -278,5 +280,4 @@ class SemanticKITTILiDARSegmentationDataset(
 #     )
 
 #     print(dataset.dataset["split"].value_counts().to_dict())
-#     print(dataset.dataset.head())    
-    
+#     print(dataset.dataset.head())
