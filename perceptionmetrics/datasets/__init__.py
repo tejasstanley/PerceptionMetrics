@@ -24,6 +24,7 @@ from perceptionmetrics.datasets.wildscenes import (
     WildscenesLiDARSegmentationDataset,
 )
 from perceptionmetrics.datasets.cityscapes import CityscapesImageSegmentationDataset
+from perceptionmetrics.datasets.semantickitti import SemanticKITTILiDARSegmentationDataset
 from perceptionmetrics.datasets.yolo import YOLODataset
 
 try:
@@ -47,6 +48,8 @@ REGISTRY = {
     "wildscenes_lidar_segmentation": WildscenesLiDARSegmentationDataset,
     "cityscapes_image_segmentation": CityscapesImageSegmentationDataset,
     "nuimages_image_segmentation": NuImagesSegmentationDataset,
+    "cityscapes_image_segmentation": CityscapesImageSegmentationDataset,
+    "semantickitti_lidar_segmentation": SemanticKITTILiDARSegmentationDataset
     "nuimages_image_detection": NuImagesDetectionDataset,
     "yolo_image_detection": YOLODataset,
 }
