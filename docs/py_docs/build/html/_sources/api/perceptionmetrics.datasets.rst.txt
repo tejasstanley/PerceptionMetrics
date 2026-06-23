@@ -92,6 +92,14 @@ perceptionmetrics.datasets.segmentation module
    :undoc-members:
    :show-inheritance:
 
+perceptionmetrics.datasets.semantickitti module
+-----------------------------------------------
+
+.. automodule:: perceptionmetrics.datasets.semantickitti
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 perceptionmetrics.datasets.wildscenes module
 --------------------------------------------
 
