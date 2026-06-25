@@ -9,7 +9,10 @@ from PIL import Image
 import torch
 from torch.utils.data import DataLoader, Dataset
 from torchvision.transforms import v2 as transforms
-from torchvision import tv_tensors
+try:
+    from torchvision import tv_tensors
+except ImportError:
+    from torchvision import datapoints as tv_tensors
 from tqdm.auto import tqdm
 
 from perceptionmetrics.datasets import detection as detection_dataset
