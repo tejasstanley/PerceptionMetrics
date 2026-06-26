@@ -1,19 +1,38 @@
-import json
 from typing import Optional
 
 import streamlit as st
+import json
 from PIL import Image
-
-
-def draw_detections(image: Image.Image, predictions: dict, label_map: Optional[dict] = None):
+try:
     import torch
+except ImportError:
+    raise ImportError(
+        "PyTorch is required for GUI-based inference and evaluation. "
+    )
+
+
+def draw_detections(image: Image, predictions: dict, label_map: Optional[dict] = None):
+    """Draw color-coded bounding boxes and labels on the image using supervision.
+
+    :param image: PIL Image
+    :type image: Image.Image
+    :param predictions: dict with 'boxes', 'labels', 'scores' (torch tensors)
+    :type predictions: dict
+    :param label_map: dict mapping label indices to class names (optional)
+    :type label_map: dict
+    :return: np.ndarray with detections drawn (for st.image)
+    :rtype: np.ndarray
+    """
     from perceptionmetrics.utils import image as ui
 
     boxes = predictions.get("boxes", torch.empty(0)).cpu().numpy()
     class_ids = predictions.get("labels", torch.empty(0)).cpu().numpy().astype(int)
 
     scores_tensor = predictions.get("scores")
-    scores = scores_tensor.cpu().numpy() if scores_tensor is not None and len(scores_tensor) > 0 else None
+    if scores_tensor is not None and len(scores_tensor) > 0:
+        scores = scores_tensor.cpu().numpy()
+    else:
+        scores = None
 
     if label_map:
         class_names = [label_map.get(int(label), str(label)) for label in class_ids]
@@ -28,21 +47,22 @@ def draw_detections(image: Image.Image, predictions: dict, label_map: Optional[d
         scores=scores,
     )
 
-def render_image_detection_inference():
-    import torch
 
+def render_image_detection_inference():
     st.header("Model Inference")
     st.markdown("Select an image and run inference using the loaded model.")
 
+    # Check if a model has been loaded and saved in session
     if (
         "detection_model" not in st.session_state
         or st.session_state.detection_model is None
     ):
-        st.warning("Load a model from the sidebar to start inference")
+        st.warning("⚠️ Load a model from the sidebar to start inference")
         return
 
     st.success("Model loaded and saved. You can now select an image.")
 
+    # Image picker in the tab
     image_file = st.file_uploader(
         "Choose an image",
         type=["jpg", "jpeg", "png"],
@@ -68,6 +88,7 @@ def render_image_detection_inference():
                 st.markdown("#### Detection Results")
                 st.image(result_img, caption="Detection Results", width="stretch")
 
+                # Display detection statistics
                 if (
                     predictions.get("scores") is not None
                     and len(predictions["scores"]) > 0
@@ -83,15 +104,44 @@ def render_image_detection_inference():
                         max_confidence = float(predictions["scores"].max())
                         st.metric("Max Confidence", f"{max_confidence:.3f}")
 
+                    # Display and download detection results
                     st.markdown("#### Detection Details")
-                    detection_results = _detection_results_to_json(predictions, label_map, torch)
+
+                    # Convert predictions to JSON format
+                    detection_results = []
+                    boxes = predictions.get("boxes", torch.empty(0)).cpu().numpy()
+                    labels = predictions.get("labels", torch.empty(0)).cpu().numpy()
+                    scores = predictions.get("scores", torch.empty(0)).cpu().numpy()
+
+                    for i in range(len(scores)):
+                        class_name = (
+                            label_map.get(int(labels[i]), f"class_{labels[i]}")
+                            if label_map
+                            else f"class_{labels[i]}"
+                        )
+                        detection_results.append(
+                            {
+                                "detection_id": i,
+                                "class_id": int(labels[i]),
+                                "class_name": class_name,
+                                "confidence": float(scores[i]),
+                                "bbox": {
+                                    "x1": float(boxes[i][0]),
+                                    "y1": float(boxes[i][1]),
+                                    "x2": float(boxes[i][2]),
+                                    "y2": float(boxes[i][3]),
+                                },
+                                "bbox_xyxy": boxes[i].tolist(),
+                            }
+                        )
 
                     with st.expander(" View Detection Results (JSON)", expanded=False):
                         st.json(detection_results)
 
+                    json_str = json.dumps(detection_results, indent=2)
                     st.download_button(
                         label="Download Detection Results as JSON",
-                        data=json.dumps(detection_results, indent=2),
+                        data=json_str,
                         file_name="detection_results.json",
                         mime="application/json",
                         help="Download the detection results as a JSON file",
@@ -100,33 +150,3 @@ def render_image_detection_inference():
                     st.info("No detections found in the image.")
             except Exception as e:
                 st.error(f"Failed to run inference: {e}")
-
-def _detection_results_to_json(predictions, label_map, torch_module):
-    detection_results = []
-    boxes = predictions.get("boxes", torch_module.empty(0)).cpu().numpy()
-    labels = predictions.get("labels", torch_module.empty(0)).cpu().numpy()
-    scores = predictions.get("scores", torch_module.empty(0)).cpu().numpy()
-
-    for i in range(len(scores)):
-        class_name = (
-            label_map.get(int(labels[i]), f"class_{labels[i]}")
-            if label_map
-            else f"class_{labels[i]}"
-        )
-        detection_results.append(
-            {
-                "detection_id": i,
-                "class_id": int(labels[i]),
-                "class_name": class_name,
-                "confidence": float(scores[i]),
-                "bbox": {
-                    "x1": float(boxes[i][0]),
-                    "y1": float(boxes[i][1]),
-                    "x2": float(boxes[i][2]),
-                    "y2": float(boxes[i][3]),
-                },
-                "bbox_xyxy": boxes[i].tolist(),
-            }
-        )
-    return detection_results
-

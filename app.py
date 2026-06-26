@@ -4,9 +4,9 @@ from perceptionmetrics.utils.torch import get_device_info
 from tabs.dataset_viewer import dataset_viewer_tab
 from tabs.evaluator import evaluator_tab
 from tabs.inference import inference_tab
-from tabs.tasks.image_detection import render_image_detection_sidebar
-
-
+from tabs.tasks.image_detection.sidebar import render_image_detection_sidebar
+from tabs.tasks.image_segmentation.sidebar import render_image_segmentation_sidebar
+from tabs.tasks.lidar_segmentation.sidebar import render_lidar_segmentation_sidebar
 st.set_page_config(page_title="PerceptionMetrics", layout="wide")
 
 PAGES = {
@@ -37,15 +37,21 @@ st.session_state.setdefault("detection_model_loaded", False)
 with st.sidebar:
     task = st.selectbox(
         "Task",
-        ["Image Detection"],
+        ["Image Detection", "Image Segmentation", "Lidar Segmentation"],
         key="task",
-        help="Only image detection is currently wired in the GUI.",
+        help="Image segmentation is currently a placeholder.",
     )
 
     if task == "Image Detection":
         render_image_detection_sidebar(available_devices)
+    elif task == "Image Segmentation":
+        render_image_segmentation_sidebar(available_devices)
+    elif task == "Lidar Segmentation":
+        render_lidar_segmentation_sidebar(available_devices)
     else:
         st.error(f"Unsupported task: {task}")
+        
+    
 
 
 tab1, tab2, tab3 = st.tabs(["Dataset Viewer", "Inference", "Evaluator"])

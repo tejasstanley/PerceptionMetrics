@@ -16,7 +16,7 @@ def render_image_detection_sidebar(available_devices):
     with st.expander("Image Detection Dataset", expanded=True):
         col1, col2 = st.columns(2)
         with col1:
-            st.selectbox("Type", ["COCO", "YOLO"], key="dataset_type")
+            st.selectbox("Type", ["COCO", "YOLO"], key="dataset_type") # split into two columns
         with col2:
             st.selectbox("Split", ["train", "val", "test"], key="split")
 
@@ -25,10 +25,10 @@ def render_image_detection_sidebar(available_devices):
             st.text_input("Dataset Folder", key="dataset_path")
         with col2:
             st.markdown(
-                "<div style='margin-bottom: 1.75rem;'></div>",
+                "<div style='margin-bottom: 1.75rem;'></div>", # add some spacing to align with the text input
                 unsafe_allow_html=True,
             )
-            st.button("Browse", on_click=browse_dataset_path)
+            st.button("Browse", on_click=browse_dataset_path) # add a button to browse for the dataset folder
 
         if st.session_state.get("dataset_type", "COCO") == "YOLO":
             st.file_uploader(
@@ -57,7 +57,7 @@ def render_image_detection_sidebar(available_devices):
             ["Manual Configuration", "Upload Config File"],
             key="config_option",
             horizontal=True,
-        )
+        ) # radio button to select between manual configuration and uploading a config file
         if (
             st.session_state.get("config_option", "Manual Configuration")
             == "Upload Config File"
