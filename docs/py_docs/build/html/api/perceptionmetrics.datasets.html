@@ -1311,6 +1311,95 @@ ontology -&gt; <a class="reference external" href="https://drive.google.com/file
 </dd></dl>
 
 </section>
+<section id="module-perceptionmetrics.datasets.semantickitti">
+<span id="perceptionmetrics-datasets-semantickitti-module"></span><h2>perceptionmetrics.datasets.semantickitti module<a class="headerlink" href="#module-perceptionmetrics.datasets.semantickitti" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="perceptionmetrics.datasets.semantickitti.SemanticKITTILiDARSegmentationDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">perceptionmetrics.datasets.semantickitti.</span></span><span class="sig-name descname"><span class="pre">SemanticKITTILiDARSegmentationDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/perceptionmetrics/datasets/semantickitti.html#SemanticKITTILiDARSegmentationDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#perceptionmetrics.datasets.semantickitti.SemanticKITTILiDARSegmentationDataset" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#perceptionmetrics.datasets.segmentation.LiDARSegmentationDataset" title="perceptionmetrics.datasets.segmentation.LiDARSegmentationDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">LiDARSegmentationDataset</span></code></a></p>
+<p>Specific class for SemanticKITTI-styled LiDAR segmentation datasets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset_dir</strong> (<em>str</em>) – Directory where SemanticKITTI data has been extracted to</p></li>
+<li><p><strong>config_fname</strong> (<em>str</em>) – SemanticKITTI YAML config containing ontology and splits</p></li>
+<li><p><strong>split</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Split or splits to load. Accepts “train”, “val”/”valid”, and “test”.
+Loads all splits if None, defaults to None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="perceptionmetrics.datasets.semantickitti.build_dataset">
+<span class="sig-prename descclassname"><span class="pre">perceptionmetrics.datasets.semantickitti.</span></span><span class="sig-name descname"><span class="pre">build_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/perceptionmetrics/datasets/semantickitti.html#build_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#perceptionmetrics.datasets.semantickitti.build_dataset" title="Link to this definition">¶</a></dt>
+<dd><p>Build dataset and ontology dictionaries from SemanticKITTI dataset structure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset_dir</strong> (<em>str</em>) – Directory where SemanticKITTI data has been extracted to</p></li>
+<li><p><strong>config_fname</strong> (<em>str</em>) – SemanticKITTI YAML config containing ontology and splits</p></li>
+<li><p><strong>split</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Split or splits to load. Loads all splits if None, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataset and ontology</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[dict, dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="perceptionmetrics.datasets.semantickitti.build_ontology">
+<span class="sig-prename descclassname"><span class="pre">perceptionmetrics.datasets.semantickitti.</span></span><span class="sig-name descname"><span class="pre">build_ontology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_train_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ontology_fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/perceptionmetrics/datasets/semantickitti.html#build_ontology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#perceptionmetrics.datasets.semantickitti.build_ontology" title="Link to this definition">¶</a></dt>
+<dd><p>Build SemanticKITTI ontology.</p>
+<p>If use_train_id=False, builds the raw SemanticKITTI ontology using raw label IDs
+such as 0, 10, 11, 40, 252, etc.</p>
+<p>If use_train_id=True, builds the compact training ontology using train IDs
+from learning_map_inv, usually 0 to 19.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_fname</strong> (<em>str</em>) – SemanticKITTI YAML config file.</p></li>
+<li><p><strong>use_train_id</strong> (<em>bool</em>) – Whether to build compact train-ID ontology, defaults to False.</p></li>
+<li><p><strong>ontology_fname</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Optional output JSON file to save ontology.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Ontology dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="perceptionmetrics.datasets.semantickitti.build_train_id_ontology_translation">
+<span class="sig-prename descclassname"><span class="pre">perceptionmetrics.datasets.semantickitti.</span></span><span class="sig-name descname"><span class="pre">build_train_id_ontology_translation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/perceptionmetrics/datasets/semantickitti.html#build_train_id_ontology_translation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#perceptionmetrics.datasets.semantickitti.build_train_id_ontology_translation" title="Link to this definition">¶</a></dt>
+<dd><p>Build ontology translation from raw SemanticKITTI classes to train-ID classes.</p>
+<p>The translation is based on SemanticKITTI’s learning_map.</p>
+<p class="rubric">Example</p>
+<p>moving-car -&gt; car
+moving-person -&gt; person
+parking -&gt; parking
+road -&gt; road</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config_fname</strong> (<em>str</em>) – SemanticKITTI YAML config file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary mapping raw class names to train-ID class names.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-perceptionmetrics.datasets.wildscenes">
 <span id="perceptionmetrics-datasets-wildscenes-module"></span><h2>perceptionmetrics.datasets.wildscenes module<a class="headerlink" href="#module-perceptionmetrics.datasets.wildscenes" title="Link to this heading">¶</a></h2>
 <dl class="py class">
@@ -1600,6 +1689,13 @@ split    -&gt; <a class="reference external" href="https://github.com/csiro-robo
 <li><a class="reference internal" href="#perceptionmetrics.datasets.segmentation.SegmentationDataset.read_label"><code class="docutils literal notranslate"><span class="pre">SegmentationDataset.read_label()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-perceptionmetrics.datasets.semantickitti">perceptionmetrics.datasets.semantickitti module</a><ul>
+<li><a class="reference internal" href="#perceptionmetrics.datasets.semantickitti.SemanticKITTILiDARSegmentationDataset"><code class="docutils literal notranslate"><span class="pre">SemanticKITTILiDARSegmentationDataset</span></code></a></li>
+<li><a class="reference internal" href="#perceptionmetrics.datasets.semantickitti.build_dataset"><code class="docutils literal notranslate"><span class="pre">build_dataset()</span></code></a></li>
+<li><a class="reference internal" href="#perceptionmetrics.datasets.semantickitti.build_ontology"><code class="docutils literal notranslate"><span class="pre">build_ontology()</span></code></a></li>
+<li><a class="reference internal" href="#perceptionmetrics.datasets.semantickitti.build_train_id_ontology_translation"><code class="docutils literal notranslate"><span class="pre">build_train_id_ontology_translation()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-perceptionmetrics.datasets.wildscenes">perceptionmetrics.datasets.wildscenes module</a><ul>
