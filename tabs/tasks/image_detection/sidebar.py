@@ -5,7 +5,7 @@ from typing import Optional
 
 import streamlit as st
 
-from perceptionmetrics.utils.gui import browse_folder
+from tabs.tasks.utils import browse_folder
 
 
 def browse_dataset_path():
@@ -326,4 +326,3 @@ def _uploaded_model_to_tempfile(uploaded_file) -> Optional[str]:
     except Exception as e:
         st.error(f"Failed to save model file: {e}")
         return None
-

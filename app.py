@@ -34,6 +34,14 @@ st.session_state.setdefault("evaluation_step", 5)
 st.session_state.setdefault("detection_model", None)
 st.session_state.setdefault("detection_model_loaded", False)
 
+# Image segmentation state
+st.session_state.setdefault("segmentation_model", None)
+st.session_state.setdefault("segmentation_model_loaded", False)
+st.session_state.setdefault("segmentation_model_type", "Torch Model File")
+st.session_state.setdefault("segmentation_model_path", "")
+st.session_state.setdefault("segmentation_config_path", "")
+st.session_state.setdefault("segmentation_ontology_path", "")
+
 with st.sidebar:
     task = st.selectbox(
         "Task",

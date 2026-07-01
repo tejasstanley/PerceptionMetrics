@@ -5,7 +5,7 @@ import json
 from perceptionmetrics.datasets.coco import CocoDataset
 
 
-from perceptionmetrics.utils.gui import browse_folder
+from tabs.tasks.utils import browse_folder
 from perceptionmetrics.datasets.coco import find_img_dir_and_ann_file
 
 

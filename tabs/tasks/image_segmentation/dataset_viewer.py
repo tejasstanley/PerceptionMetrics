@@ -6,6 +6,7 @@ import streamlit as st
 from PIL import Image
 
 from perceptionmetrics.datasets.cityscapes import CityscapesImageSegmentationDataset
+from tabs.tasks.utils import render_image_grid
 
 
 def render_image_segmentation_viewer():
@@ -39,22 +40,28 @@ def _render_cityscapes_viewer():
         st.warning(f"No Cityscapes samples found for split '{split}'.")
         return
 
-    col1, col2 = st.columns([3, 1])
-    with col1:
-        sample_name = st.selectbox(
-            "Sample",
-            split_df.index.tolist(),
-            key=f"cityscapes_segmentation_sample_{split}",
-        )
-    with col2:
-        mask_opacity = st.slider(
-            "Mask Opacity",
-            min_value=0.0,
-            max_value=1.0,
-            value=0.45,
-            step=0.05,
-            key="cityscapes_segmentation_mask_opacity",
-        )
+    sample_names = split_df.index.tolist()
+    image_paths = split_df["image"].tolist()
+    selected_img_path, sample_name = render_image_grid(
+        item_names=sample_names,
+        image_paths=image_paths,
+        state_prefix="cityscapes_segmentation",
+        context=f"{dataset_path}_{split}",
+        search_label="sample",
+    )
+
+    if not selected_img_path:
+        st.info("Select an image to view the ground truth mask.")
+        return
+
+    mask_opacity = st.slider(
+        "Mask Opacity",
+        min_value=0.0,
+        max_value=1.0,
+        value=0.45,
+        step=0.05,
+        key="cityscapes_segmentation_mask_opacity",
+    )
 
     row = split_df.loc[sample_name]
     image_fname = row["image"]

@@ -222,9 +222,14 @@ class ImageDetectionTorchDataset(Dataset):
         # Convert boxes/labels to tensors
         if len(boxes) == 0:
             boxes = torch.zeros((0, 4), dtype=torch.float32)
-        boxes = tv_tensors.BoundingBoxes(
-            boxes, format="XYXY", canvas_size=(image.height, image.width)
-        )
+        if hasattr(tv_tensors, "BoundingBoxes"):
+            boxes = tv_tensors.BoundingBoxes(
+                boxes, format="XYXY", canvas_size=(image.height, image.width)
+            )
+        else:
+            boxes = tv_tensors.BoundingBox(
+                boxes, format="XYXY", spatial_size=(image.height, image.width)
+            )
         category_indices = torch.as_tensor(category_indices, dtype=torch.int64)
 
         target = {
